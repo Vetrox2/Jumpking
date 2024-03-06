@@ -13,18 +13,19 @@ public class PlayerController : MonoBehaviour
     public float JumpMaxLoadingTime;
     public LayerMask GroundMask;
     public PhysicsMaterial2D PlayerMaterial, PlayerJumpMaterial;
+    public bool duringJump { get; private set; } = false;
+
 
     public bool IsGrounded;
 
     Rigidbody2D rb;
     BoxCollider2D collider1;
     float jumpLoadingTime = 0;
-    private bool duringJump = false;
     private bool waitAfterJump = false;
     private bool duringLoadingJump = false;
     float moveInput = 0;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         collider1 = GetComponent<BoxCollider2D>();
@@ -32,17 +33,14 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         moveInput = Input.GetAxis("Horizontal");
-
+    }
+    private void FixedUpdate()
+    {
         if (!duringLoadingJump && IsGrounded && !duringJump)
         {
             rb.velocity = new Vector2(MovementSpeed * moveInput, rb.velocity.y);
         }
-        
-        Debug.Log($"{IsGrounded}, {rb.velocity}         {Time.deltaTime}");
-    }
-    private void FixedUpdate()
-    {
-        if(!duringJump)
+        if (!duringJump)
             IsGrounded = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y-0.05f), collider1.size, 0, GroundMask);
         else if (!waitAfterJump)
             IsGrounded = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y-0.25f), collider1.size*0.8f, 0, GroundMask);
@@ -56,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started && IsGrounded)
+        if (context.started && IsGrounded && !duringJump)
         {
             duringLoadingJump = true;
             jumpLoadingTime = (float)context.startTime;
@@ -77,4 +75,10 @@ public class PlayerController : MonoBehaviour
         }
     }
     void JumpCD() => waitAfterJump = false;
+    public void LoadDuringJump()
+    {
+        duringJump = true;
+        rb.interpolation = RigidbodyInterpolation2D.Extrapolate;
+        collider1.sharedMaterial = PlayerJumpMaterial;
+    }
 }
