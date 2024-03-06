@@ -5,7 +5,9 @@ using UnityEngine;
 
 public static class SaveLoad
 {
-    static public void Save(string path, GameController gameController, string key = "")
+    static string key = "4163731634";
+    static public string path = "/Saves/save.sav";
+    static public void Save(GameController gameController)
     {
         var player = GameController.FindPlayer();
         SaveData save = new SaveData
@@ -19,7 +21,7 @@ public static class SaveLoad
         saveStr = EncryptFile(saveStr, key);
         File.WriteAllText(Application.dataPath + path, saveStr);
     }
-    static public void Load(string path, GameController gameController, string key = "")
+    static public void Load(GameController gameController)
     {
         var player = GameController.FindPlayer();
         if (File.Exists(Application.dataPath + path))
@@ -38,17 +40,17 @@ public static class SaveLoad
             catch
             {
                 File.Delete(Application.dataPath + path);
-                LoadNewGame(path, gameController, key);
+                LoadNewGame(gameController);
             }
         }
         else
         {
-            LoadNewGame(path, gameController, key);
+            LoadNewGame(gameController);
         }
     }
-    static public void LoadNewGame(string path, GameController gameController, string key = "")
+    static public void LoadNewGame(GameController gameController)
     {
-        Save(path, gameController, key);
+        Save(gameController);
     }
     static string EncryptFile(string file, string key)
     {

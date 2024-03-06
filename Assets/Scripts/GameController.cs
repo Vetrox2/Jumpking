@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    static string key = "4163731634";
     [HideInInspector]
     public float time = 0;
-    string path = "/Saves/save.sav";
     private void Start()
     {
-        SaveLoad.Load(path, this, key);
+        SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
     }
     private void Update()
@@ -27,7 +25,7 @@ public class GameController : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.2f);
-            SaveLoad.Save(path, this, key);
+            SaveLoad.Save(this);
         }
     }
     static public GameObject FindPlayer()
