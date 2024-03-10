@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public Camera Camera;
+    public GameObject EndingScreen;
     [HideInInspector]
     public float time = 0;
     private void Start()
     {
         SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
+        Camera.GetComponent<CameraController>().InitializeCameraPosition();
     }
     private void Update()
     {
@@ -18,7 +21,8 @@ public class GameController : MonoBehaviour
     }
     public void Finished()
     {
-        //koniec, wyslanie wynikow itp
+        EndingScreen.SetActive(true);
+        //send time to db
     }
     IEnumerator ActiveSaving()
     {
