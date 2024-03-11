@@ -11,11 +11,14 @@ public class GameController : MonoBehaviour
     public GameObject Menu;
     [HideInInspector]
     public float time = 0;
+    
+    bool finished = false;
     private void Start()
     {
         SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
         Camera.GetComponent<CameraController>().InitializeCameraPosition();
+        
     }
     private void Update()
     {
@@ -23,15 +26,26 @@ public class GameController : MonoBehaviour
     }
     public void Finished()
     {
-        EndingScreen.SetActive(true);
-        //send time to db
+        if (!finished)
+        {
+            finished = true;
+            EndingScreen.SetActive(true);
+            RealmController realmController = new();
+            realmController.SendHighscore("gracz", time);
+            StopAllCoroutines();
+            Invoke("DeleteSave", 0.3f);
+        }
+    }
+    void DeleteSave()
+    {
+        SaveLoad.DeleteSave();
     }
     IEnumerator ActiveSaving()
     {
-        while (true)
+        while (!finished)
         {
-            yield return new WaitForSeconds(0.2f);
             SaveLoad.Save(this);
+            yield return new WaitForSeconds(0.2f);
         }
     }
     static public GameObject FindPlayer()
@@ -43,7 +57,8 @@ public class GameController : MonoBehaviour
     }
     public void BackToMenu()
     {
-        SaveLoad.Save(this);
+        if (!finished)
+            SaveLoad.Save(this);
         SceneManager.LoadScene(0);
     }
     public void Escape()

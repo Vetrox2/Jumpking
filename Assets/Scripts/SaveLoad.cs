@@ -39,7 +39,7 @@ public static class SaveLoad
             }
             catch
             {
-                File.Delete(Application.dataPath + path);
+                DeleteSave();
                 LoadNewGame(gameController);
             }
         }
@@ -51,6 +51,11 @@ public static class SaveLoad
     static public void LoadNewGame(GameController gameController)
     {
         Save(gameController);
+    }
+    static public void DeleteSave()
+    {
+        if(File.Exists(Application.dataPath + path))
+            File.Delete(Application.dataPath + path);
     }
     static string EncryptFile(string file, string key)
     {

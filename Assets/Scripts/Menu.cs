@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.IO;
+using System;
 
 public class Menu : MonoBehaviour
 {
@@ -13,12 +14,30 @@ public class Menu : MonoBehaviour
         GameObject MainMenu;
     [SerializeField]
         GameObject RankingMenu;
+    [SerializeField]
+        GameObject SetNameScreen;
+    [SerializeField]
+        InputField SetNameField;
+    [SerializeField]
+        ScoreTable[] scoreTable;
 
     GameObject currentMenu;
-
+    private void Start()
+    {
+        if (PlayerPrefs.GetString("name") == null || PlayerPrefs.GetString("name") == "")
+        {
+            SetNameScreen.SetActive(true);
+            currentMenu = SetNameScreen;
+        }
+    }
+    public void SetName()
+    {
+        PlayerPrefs.SetString("name", SetNameField.text);
+        BackToMenu();
+    }
     public void NewGame()
     {
-        File.Delete(Application.dataPath + SaveLoad.path);
+        SaveLoad.DeleteSave();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
     public void Continue()
@@ -34,6 +53,13 @@ public class Menu : MonoBehaviour
         currentMenu = RankingMenu;
         MainMenu.SetActive(false);
         RankingMenu.SetActive(true);
+        RealmController realmController = new();
+        var scores = realmController.GetHighscore();
+        for(int i = 0; i < scoreTable.Length; i++)
+        {
+            scoreTable[i].name.text = scores[i].Player;
+            scoreTable[i].time.text = scores[i].Time.ToString();
+        }
     }
     public void Escape(InputAction.CallbackContext contex)
     {
@@ -44,5 +70,11 @@ public class Menu : MonoBehaviour
     {
         MainMenu.SetActive(true);
         currentMenu.SetActive(false);
+    }
+    [Serializable]
+    public class ScoreTable
+    {
+        public TextMeshProUGUI name;
+        public TextMeshProUGUI time;
     }
 }
