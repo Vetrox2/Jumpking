@@ -6,7 +6,7 @@ using UnityEngine;
 public static class SaveLoad
 {
     static string key = "4163731634";
-    static public string path = "/Saves/save.sav";
+    static public string path = "/save.sav";
     static public void Save(GameController gameController)
     {
         var player = GameController.FindPlayer();

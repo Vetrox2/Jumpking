@@ -31,7 +31,7 @@ public class GameController : MonoBehaviour
             finished = true;
             EndingScreen.SetActive(true);
             RealmController realmController = new();
-            realmController.SendHighscore("gracz", time);
+            realmController.SendHighscore(PlayerPrefs.GetString("name"), time);
             StopAllCoroutines();
             Invoke("DeleteSave", 0.3f);
         }

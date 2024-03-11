@@ -17,7 +17,7 @@ public class Menu : MonoBehaviour
     [SerializeField]
         GameObject SetNameScreen;
     [SerializeField]
-        InputField SetNameField;
+        TMP_InputField SetNameField;
     [SerializeField]
         ScoreTable[] scoreTable;
 
@@ -55,7 +55,7 @@ public class Menu : MonoBehaviour
         RankingMenu.SetActive(true);
         RealmController realmController = new();
         var scores = realmController.GetHighscore();
-        for(int i = 0; i < scoreTable.Length; i++)
+        for(int i = 0; i < scoreTable.Length && i < scores.Count; i++)
         {
             scoreTable[i].name.text = scores[i].Player;
             scoreTable[i].time.text = scores[i].Time.ToString();

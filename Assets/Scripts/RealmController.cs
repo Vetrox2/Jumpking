@@ -27,6 +27,12 @@ public class RealmController
         User user = await Get_userAsync(app);
         FlexibleSyncConfiguration config = GetConfig(user);
         realm = Realm.GetInstance(config);
+        realm.Subscriptions.Update(() =>
+        {
+            var myScores = realm.All<Highscore>();
+            realm.Subscriptions.Add(myScores);
+        });
+        await realm.Subscriptions.WaitForSynchronizationAsync();
     }
 
     private FlexibleSyncConfiguration GetConfig(User user)
@@ -64,6 +70,7 @@ public class RealmController
         }
         catch (Exception e)
         {
+            Debug.LogException(e);
         }
         return null;
     }
@@ -79,6 +86,7 @@ public class RealmController
         }
         catch (Exception e)
         {
+            Debug.LogException(e);
         }
     }
 }

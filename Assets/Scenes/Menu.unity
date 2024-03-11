@@ -878,7 +878,7 @@ MonoBehaviour:
   MainMenu: {fileID: 1525663551}
   RankingMenu: {fileID: 896851091}
   SetNameScreen: {fileID: 62973997}
-  SetNameField: {fileID: 0}
+  SetNameField: {fileID: 1599826332}
   scoreTable:
   - name: {fileID: 707253608}
     time: {fileID: 1135660980}
@@ -2608,7 +2608,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 136797305}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: BackToMenu
+        m_MethodName: SetName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
