@@ -10,11 +10,7 @@ public class PlayerController : MonoBehaviour
     public float JumpMaxLoadingTime;
     public LayerMask GroundMask;
     public PhysicsMaterial2D PlayerMaterial, PlayerJumpMaterial;
-    public bool duringJump { get; private set; } = false;
     public GameObject spriteObject;
-
-    [HideInInspector]
-    public bool IsGrounded;
 
     Animator animator;
     Rigidbody2D rb;
@@ -24,6 +20,11 @@ public class PlayerController : MonoBehaviour
     bool waitAfterJump = false;
     bool duringLoadingJump = false;
     float moveInput = 0;
+
+    public bool duringJump { get; private set; } = false;
+    public bool IsGrounded { get; private set; }
+
+
 
     private void Awake()
     {
@@ -67,14 +68,7 @@ public class PlayerController : MonoBehaviour
             duringJump = false;
         }
     }
-    void ResetFall()
-    {
-        animator.SetBool("Fall", false);
-    }
-    void Flip()
-    {
-        spriteObject.transform.localScale = new Vector3(spriteObject.transform.localScale.x * -1, spriteObject.transform.localScale.y, spriteObject.transform.localScale.z);
-    }
+
     public void Jump(InputAction.CallbackContext context)
     {
         if (context.started && IsGrounded && !duringJump)
@@ -99,11 +93,24 @@ public class PlayerController : MonoBehaviour
             Invoke("JumpCD", 0.2f);
         }
     }
-    void JumpCD() => waitAfterJump = false;
+
     public void LoadDuringJump()
     {
         duringJump = true;
         rb.interpolation = RigidbodyInterpolation2D.Extrapolate;
         collider2.sharedMaterial = PlayerJumpMaterial;
     }
+
+    void ResetFall()
+    {
+        animator.SetBool("Fall", false);
+    }
+
+    void Flip()
+    {
+        spriteObject.transform.localScale = new Vector3(spriteObject.transform.localScale.x * -1, spriteObject.transform.localScale.y, spriteObject.transform.localScale.z);
+    }
+    
+    void JumpCD() => waitAfterJump = false;
+    
 }

@@ -45,7 +45,7 @@ public class Menu : MonoBehaviour
         currentMenu = RankingMenu;
         MainMenu.SetActive(false);
         RankingMenu.SetActive(true);
-        RealmController realmController = new();
+        RealmController realmController = new(this.gameObject);
         var scores = realmController.GetHighscore();
         for (int i = 0; i < scoreTable.Length && i < scores.Count; i++)
         {

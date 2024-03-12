@@ -13,12 +13,12 @@ public class RealmController
     private Realm realm;
     private readonly string myRealmAppId = "application-0-lvuzw";
 
-    public RealmController()
+    public RealmController(GameObject gm = null)
     {
-        InitAsync();
+        InitAsync(gm);
     }
 
-    private async void InitAsync()
+    private async void InitAsync(GameObject gm)
     {
         var app = App.Create(myRealmAppId);
         User user = await Get_userAsync(app);
@@ -31,6 +31,7 @@ public class RealmController
             realm.Subscriptions.Add(myScores);
         });
         await realm.Subscriptions.WaitForSynchronizationAsync();
+        Debug.Log(gm.name);
     }
 
     private FlexibleSyncConfiguration GetConfig(User user)
@@ -72,6 +73,7 @@ public class RealmController
         }
         return null;
     }
+
     public void SendHighscore(string name, float time)
     {
         try
