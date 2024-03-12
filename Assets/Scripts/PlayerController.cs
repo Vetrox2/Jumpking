@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    public bool DuringJump { get; private set; }
+    public bool IsGrounded { get; private set; }
+
     public float MovementSpeed;
     public float MaxJumpHeight;
     public float MinJumpHeight;
@@ -17,12 +20,11 @@ public class PlayerController : MonoBehaviour
     BoxCollider2D collider1;
     EdgeCollider2D collider2;
     float jumpLoadingTime = 0;
-    bool waitAfterJump = false;
-    bool duringLoadingJump = false;
+    bool waitAfterJump;
+    bool duringLoadingJump;
     float moveInput = 0;
 
-    public bool duringJump { get; private set; } = false;
-    public bool IsGrounded { get; private set; }
+    
 
 
 
@@ -33,6 +35,7 @@ public class PlayerController : MonoBehaviour
         collider2 = GetComponent<EdgeCollider2D>();
         animator = GetComponentInChildren<Animator>();
     }
+
     private void Update()
     {
         moveInput = Input.GetAxis("Horizontal");
@@ -43,15 +46,16 @@ public class PlayerController : MonoBehaviour
         else if (rb.velocity.x > 0.05f && spriteObject.transform.localScale.x < 0)
             Flip();
     }
+
     private void FixedUpdate()
     {
-        if (!duringLoadingJump && IsGrounded && !duringJump && Mathf.Abs(rb.velocity.y) < 0.1f)
+        if (!duringLoadingJump && IsGrounded && !DuringJump && Mathf.Abs(rb.velocity.y) < 0.1f)
         {
             rb.velocity = new Vector2(MovementSpeed * moveInput, rb.velocity.y);
             if (Mathf.Abs(moveInput) > 0.02f)
                 animator.SetBool("Walking", true);
         }
-        if (!duringJump)
+        if (!DuringJump)
             IsGrounded = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.15f), collider1.size, 0, GroundMask);
         else if (!waitAfterJump)
         {
@@ -65,26 +69,26 @@ public class PlayerController : MonoBehaviour
             Invoke("ResetFall", 0.5f);
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             collider2.sharedMaterial = PlayerMaterial;
-            duringJump = false;
+            DuringJump = false;
         }
     }
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started && IsGrounded && !duringJump)
+        if (context.started && IsGrounded && !DuringJump)
         {
             animator.SetBool("Walking", false);
             duringLoadingJump = true;
             jumpLoadingTime = (float)context.startTime;
             rb.velocity = new Vector3(0, rb.velocity.y);
         }
-        else if (context.canceled && IsGrounded && !duringJump && duringLoadingJump)
+        else if (context.canceled && IsGrounded && !DuringJump && duringLoadingJump)
         {
             collider2.sharedMaterial = PlayerJumpMaterial;
             rb.interpolation = RigidbodyInterpolation2D.Extrapolate;
             jumpLoadingTime = (float)context.startTime - jumpLoadingTime;
             duringLoadingJump = false;
-            duringJump = true;
+            DuringJump = true;
             waitAfterJump = true;
             float jumpX = moveInput > 0 ? 1 : -1;
             jumpX = moveInput == 0 ? 0 : jumpX;
@@ -96,7 +100,7 @@ public class PlayerController : MonoBehaviour
 
     public void LoadDuringJump()
     {
-        duringJump = true;
+        DuringJump = true;
         rb.interpolation = RigidbodyInterpolation2D.Extrapolate;
         collider2.sharedMaterial = PlayerJumpMaterial;
     }

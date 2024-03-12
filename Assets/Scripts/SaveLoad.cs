@@ -16,7 +16,7 @@ public static class SaveLoad
             time = gameController.time,
             playerPos = player.transform.position,
             playerVelocity = player.GetComponent<Rigidbody2D>().velocity,
-            playerDuringJump = player.GetComponent<PlayerController>().duringJump
+            playerDuringJump = player.GetComponent<PlayerController>().DuringJump
         };
         string saveStr = JsonUtility.ToJson(save);
         saveStr = EncryptFile(saveStr, key);
