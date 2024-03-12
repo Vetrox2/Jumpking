@@ -14,7 +14,6 @@ public class RealmController
 {
     private Realm realm;
     private readonly string myRealmAppId = "application-0-lvuzw";
-    //private readonly string apiKey = "XXXXXXXXXXXXXXXXXXXXXXX";
 
     public RealmController()
     {
@@ -65,7 +64,7 @@ public class RealmController
     {
         try
         {
-            var currentHighscore = realm.All<Highscore>().OrderBy(x=>x.Time).ToList();
+            var currentHighscore = realm.All<Highscore>().OrderBy(x => x.Time).ToList();
             return currentHighscore;
         }
         catch (Exception e)
@@ -80,9 +79,9 @@ public class RealmController
         {
             realm.Write(() =>
             {
-                realm.Add(new Highscore {Player=name, Time= Math.Round(time,2)});
+                realm.Add(new Highscore { Player = name, Time = Math.Round(time, 2) });
             });
-            
+
         }
         catch (Exception e)
         {

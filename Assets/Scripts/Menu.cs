@@ -11,17 +11,18 @@ using System;
 public class Menu : MonoBehaviour
 {
     [SerializeField]
-        GameObject MainMenu;
+    GameObject MainMenu;
     [SerializeField]
-        GameObject RankingMenu;
+    GameObject RankingMenu;
     [SerializeField]
-        GameObject SetNameScreen;
+    GameObject SetNameScreen;
     [SerializeField]
-        TMP_InputField SetNameField;
+    TMP_InputField SetNameField;
     [SerializeField]
-        ScoreTable[] scoreTable;
+    ScoreTable[] scoreTable;
 
     GameObject currentMenu;
+
     private void Start()
     {
         if (PlayerPrefs.GetString("name") == null || PlayerPrefs.GetString("name") == "")
@@ -40,14 +41,10 @@ public class Menu : MonoBehaviour
         SaveLoad.DeleteSave();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-    public void Continue()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-    public void Exit()
-    {
-        Application.Quit();
-    }
+    public void Continue() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+    public void Exit() => Application.Quit();
+
     public void Ranking()
     {
         currentMenu = RankingMenu;
@@ -55,7 +52,7 @@ public class Menu : MonoBehaviour
         RankingMenu.SetActive(true);
         RealmController realmController = new();
         var scores = realmController.GetHighscore();
-        for(int i = 0; i < scoreTable.Length && i < scores.Count; i++)
+        for (int i = 0; i < scoreTable.Length && i < scores.Count; i++)
         {
             scoreTable[i].name.text = scores[i].Player;
             scoreTable[i].time.text = scores[i].Time.ToString();
@@ -71,10 +68,5 @@ public class Menu : MonoBehaviour
         MainMenu.SetActive(true);
         currentMenu.SetActive(false);
     }
-    [Serializable]
-    public class ScoreTable
-    {
-        public TextMeshProUGUI name;
-        public TextMeshProUGUI time;
-    }
+
 }

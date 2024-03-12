@@ -54,7 +54,7 @@ public static class SaveLoad
     }
     static public void DeleteSave()
     {
-        if(File.Exists(Application.dataPath + path))
+        if (File.Exists(Application.dataPath + path))
             File.Delete(Application.dataPath + path);
     }
     static string EncryptFile(string file, string key)
@@ -66,5 +66,5 @@ public static class SaveLoad
         }
         return result;
     }
-    
+
 }

@@ -6,19 +6,23 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    public Camera Camera;
-    public GameObject EndingScreen;
-    public GameObject Menu;
+    [SerializeField]
+    Camera Camera;
+    [SerializeField]
+    GameObject EndingScreen;
+    [SerializeField]
+    GameObject Menu;
+
     [HideInInspector]
     public float time = 0;
-    
+
     bool finished = false;
+
     private void Start()
     {
         SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
         Camera.GetComponent<CameraController>().InitializeCameraPosition();
-        
     }
     private void Update()
     {
@@ -36,10 +40,8 @@ public class GameController : MonoBehaviour
             Invoke("DeleteSave", 0.3f);
         }
     }
-    void DeleteSave()
-    {
-        SaveLoad.DeleteSave();
-    }
+    void DeleteSave() => SaveLoad.DeleteSave();
+
     IEnumerator ActiveSaving()
     {
         while (!finished)
@@ -61,8 +63,6 @@ public class GameController : MonoBehaviour
             SaveLoad.Save(this);
         SceneManager.LoadScene(0);
     }
-    public void Escape()
-    {
-        Menu.SetActive(!Menu.active);
-    }
+    public void Escape() => Menu.SetActive(!Menu.active);
+
 }

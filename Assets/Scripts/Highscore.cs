@@ -15,7 +15,7 @@ public partial class Highscore : IRealmObject
 
 
 
-public Highscore()
+    public Highscore()
     {
         Id = ObjectId.GenerateNewId();
     }

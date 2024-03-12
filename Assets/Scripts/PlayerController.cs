@@ -15,18 +15,18 @@ public class PlayerController : MonoBehaviour
     public LayerMask GroundMask;
     public PhysicsMaterial2D PlayerMaterial, PlayerJumpMaterial;
     public bool duringJump { get; private set; } = false;
+    public GameObject spriteObject;
 
-
+    [HideInInspector]
     public bool IsGrounded;
 
     Animator animator;
     Rigidbody2D rb;
     BoxCollider2D collider1;
     EdgeCollider2D collider2;
-    public GameObject spriteObject;
     float jumpLoadingTime = 0;
-    private bool waitAfterJump = false;
-    private bool duringLoadingJump = false;
+    bool waitAfterJump = false;
+    bool duringLoadingJump = false;
     float moveInput = 0;
 
     private void Awake()
@@ -48,11 +48,11 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!duringLoadingJump && IsGrounded && !duringJump && Mathf.Abs(rb.velocity.y)<0.1f)
+        if (!duringLoadingJump && IsGrounded && !duringJump && Mathf.Abs(rb.velocity.y) < 0.1f)
         {
             rb.velocity = new Vector2(MovementSpeed * moveInput, rb.velocity.y);
             if (Mathf.Abs(moveInput) > 0.02f)
-                animator.SetBool("Walking",true);
+                animator.SetBool("Walking", true);
         }
         if (!duringJump)
             IsGrounded = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.15f), collider1.size, 0, GroundMask);
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
             waitAfterJump = true;
             float jumpX = moveInput > 0 ? 1 : -1;
             jumpX = moveInput == 0 ? 0 : jumpX;
-            rb.velocity = new Vector2(MovementSpeed * jumpX/1.2f, Mathf.Lerp(MinJumpHeight, MaxJumpHeight, jumpLoadingTime / JumpMaxLoadingTime));
+            rb.velocity = new Vector2(MovementSpeed * jumpX / 1.2f, Mathf.Lerp(MinJumpHeight, MaxJumpHeight, jumpLoadingTime / JumpMaxLoadingTime));
             animator.SetBool("Jumping", true);
             Invoke("JumpCD", 0.2f);
         }
