@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Realms;
 using Realms.Sync;
 using UnityEngine;
-using Realms.Logging;
-using Logger = Realms.Logging.Logger;
 using Realms.Sync.ErrorHandling;
 using Realms.Sync.Exceptions;
 using System.Linq;

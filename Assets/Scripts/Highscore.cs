@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Realms;
 using MongoDB.Bson;
 public partial class Highscore : IRealmObject
