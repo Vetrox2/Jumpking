@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,8 @@ public class GameController : MonoBehaviour
     GameObject EndingScreen;
     [SerializeField]
     GameObject Menu;
+    [SerializeField]
+    TextMeshProUGUI TimeText;
 
     [HideInInspector]
     public float time = 0;
@@ -33,6 +36,7 @@ public class GameController : MonoBehaviour
         if (!finished)
         {
             finished = true;
+            TimeText.text = "Your time: " + System.Math.Round(time,2).ToString();
             EndingScreen.SetActive(true);
             RealmController realmController = new();
             realmController.SendHighscore(PlayerPrefs.GetString("name"), time);
