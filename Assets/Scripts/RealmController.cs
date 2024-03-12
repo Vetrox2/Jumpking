@@ -24,6 +24,7 @@ public class RealmController
         User user = await Get_userAsync(app);
         FlexibleSyncConfiguration config = GetConfig(user);
         realm = Realm.GetInstance(config);
+        //realm = await Realm.GetInstanceAsync(config);
         realm.Subscriptions.Update(() =>
         {
             var myScores = realm.All<Highscore>();
