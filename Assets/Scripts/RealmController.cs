@@ -65,7 +65,7 @@ public class RealmController
     {
         try
         {
-            var currentHighscore = realm.All<Highscore>().OrderByDescending(x=>x.Time).ToList();
+            var currentHighscore = realm.All<Highscore>().OrderBy(x=>x.Time).ToList();
             return currentHighscore;
         }
         catch (Exception e)
