@@ -36,8 +36,8 @@ public class GameController : MonoBehaviour
             finished = true;
             TimeText.text = "Your time: " + System.Math.Round(time,2).ToString();
             EndingScreen.SetActive(true);
-            RealmController realmController = new();
-            realmController.SendHighscore(PlayerPrefs.GetString("name"), time);
+            RealmController<Highscore> realmController = new();
+            realmController.SendHighscore(PlayerPrefs.GetString("UserName"), time);
             StopAllCoroutines();
             Invoke("DeleteSave", 0.3f);
         }
@@ -63,7 +63,7 @@ public class GameController : MonoBehaviour
     {
         if (!finished)
             SaveLoad.Save(this);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
     public void Escape() => Menu.SetActive(!Menu.active);
 

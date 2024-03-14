@@ -18,19 +18,6 @@ public class Menu : MonoBehaviour
 
     GameObject currentMenu;
 
-    private void Start()
-    {
-        if (PlayerPrefs.GetString("name") == null || PlayerPrefs.GetString("name") == "")
-        {
-            SetNameScreen.SetActive(true);
-            currentMenu = SetNameScreen;
-        }
-    }
-    public void SetName()
-    {
-        PlayerPrefs.SetString("name", SetNameField.text);
-        BackToMenu();
-    }
     public void NewGame()
     {
         SaveLoad.DeleteSave();
@@ -45,7 +32,12 @@ public class Menu : MonoBehaviour
         currentMenu = RankingMenu;
         MainMenu.SetActive(false);
         RankingMenu.SetActive(true);
-        RealmController realmController = new(this.gameObject);
+        RealmController<Highscore> realmController = new();
+        realmController.RealmLoaded += GetHighscore;
+        realmController.InitAsync();
+    }
+    void GetHighscore(RealmController<Highscore> realmController)
+    {
         var scores = realmController.GetHighscore();
         for (int i = 0; i < scoreTable.Length && i < scores.Count; i++)
         {

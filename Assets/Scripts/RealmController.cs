@@ -8,30 +8,38 @@ using Realms.Sync.Exceptions;
 using System.Linq;
 using System;
 
-public class RealmController
+public class RealmController<T> where T : IRealmObject
 {
     private Realm realm;
     private readonly string myRealmAppId = "application-0-lvuzw";
+    public event Action<RealmController<T>> RealmLoaded;
 
-    public RealmController(GameObject gm = null)
+    public bool SignUp(string login, string password)
     {
-        InitAsync(gm);
-    }
+        if (realm.All<Users>().Any(Users => Users.Login == login))
+            return false;
 
-    private async void InitAsync(GameObject gm)
+        realm.Write(() =>
+        {
+            realm.Add(new Users { Login = login, Password = password });
+        });
+        return true;
+    }
+    public bool SignIn(string login, string password) => realm.All<Users>().Any(Users => Users.Login == login && Users.Password == password); 
+   
+    public async void InitAsync()
     {
         var app = App.Create(myRealmAppId);
         User user = await Get_userAsync(app);
         FlexibleSyncConfiguration config = GetConfig(user);
-        realm = Realm.GetInstance(config);
-        //realm = await Realm.GetInstanceAsync(config);
+        realm = await Realm.GetInstanceAsync(config);
         realm.Subscriptions.Update(() =>
         {
-            var myScores = realm.All<Highscore>();
-            realm.Subscriptions.Add(myScores);
+            var myTable = realm.All<T>();
+            realm.Subscriptions.Add(myTable);
         });
         await realm.Subscriptions.WaitForSynchronizationAsync();
-        Debug.Log(gm.name);
+        RealmLoaded?.Invoke(this);
     }
 
     private FlexibleSyncConfiguration GetConfig(User user)
