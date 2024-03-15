@@ -39,11 +39,13 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         moveInput = Input.GetAxis("Horizontal");
-        if (Mathf.Abs(moveInput) < 0.02f)
+        if (duringLoadingJump || DuringJump || Mathf.Abs(moveInput) < 0.05f)
             animator.SetBool("Walking", false);
-        if (rb.velocity.x < -0.05f && spriteObject.transform.localScale.x > 0)
+        if (!duringLoadingJump && !DuringJump && Mathf.Abs(moveInput) > 0.02f && Mathf.Abs(rb.velocity.x) > 0.1f)
+            animator.SetBool("Walking", true);
+        if (moveInput < -0.05f && spriteObject.transform.localScale.x > 0)
             Flip();
-        else if (rb.velocity.x > 0.05f && spriteObject.transform.localScale.x < 0)
+        else if (moveInput > 0.05f && spriteObject.transform.localScale.x < 0)
             Flip();
     }
 
@@ -52,8 +54,6 @@ public class PlayerController : MonoBehaviour
         if (!duringLoadingJump && IsGrounded && !DuringJump && Mathf.Abs(rb.velocity.y) < 0.1f)
         {
             rb.velocity = new Vector2(MovementSpeed * moveInput, rb.velocity.y);
-            if (Mathf.Abs(moveInput) > 0.02f)
-                animator.SetBool("Walking", true);
         }
         if (!DuringJump)
             IsGrounded = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.15f), collider1.size, 0, GroundMask);
