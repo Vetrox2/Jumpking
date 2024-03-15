@@ -78,7 +78,7 @@ public class LoginPanel : MonoBehaviour
         else
         {
             PlayerPrefs.SetString("UserName", SignUpPanel.UserName.text);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
     void SignInCallback(RealmController<Users> realmController)
@@ -86,7 +86,7 @@ public class LoginPanel : MonoBehaviour
         if (realmController.SignIn(SignInPanel.UserName.text, SignInPanel.Password.text))
         {
             PlayerPrefs.SetString("UserName", SignInPanel.UserName.text);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         else
         {

@@ -7,6 +7,9 @@ using Realms.Sync.ErrorHandling;
 using Realms.Sync.Exceptions;
 using System.Linq;
 using System;
+using Konscious.Security.Cryptography;
+using MongoDB.Bson.IO;
+using System.Text;
 
 public class RealmController<T> where T : IRealmObject
 {
@@ -21,11 +24,11 @@ public class RealmController<T> where T : IRealmObject
 
         realm.Write(() =>
         {
-            realm.Add(new Users { Login = login, Password = password });
+            realm.Add(new Users { Login = login, Password = HashPassword(password) });
         });
         return true;
     }
-    public bool SignIn(string login, string password) => realm.All<Users>().Any(Users => Users.Login == login && Users.Password == password); 
+    public bool SignIn(string login, string password) => realm.All<Users>().Any(Users => Users.Login == login && Users.Password == HashPassword(password)); 
    
     public async void InitAsync()
     {
@@ -96,5 +99,18 @@ public class RealmController<T> where T : IRealmObject
         {
             Debug.LogException(e);
         }
+    }
+
+    string HashPassword(string password)
+    {
+        var argon = new Argon2i(Encoding.UTF8.GetBytes(password));
+        argon.DegreeOfParallelism = 16;
+        argon.MemorySize = 8192;
+        argon.Salt = Encoding.UTF8.GetBytes("542fsewrf23f");
+        argon.Iterations = 10;
+        var hash = argon.GetBytes(128).ToList();
+        password = string.Empty;
+        hash.ForEach(x => password += x.ToString());
+        return password;
     }
 }
