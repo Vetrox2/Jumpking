@@ -14,6 +14,13 @@ public class LoginPanel : MonoBehaviour
     [SerializeField]
     SignPanel SignInPanel;
 
+    public void PressedEnter()
+    {
+        if (SignUpPanel.SignPanelObject.activeInHierarchy)
+            SignUp();
+        else
+            SignIn();
+    }
     public void SwapToLoginPanel()
     {
         SignUpPanel.SignPanelObject.SetActive(false);

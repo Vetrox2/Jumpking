@@ -24,6 +24,8 @@ public class GameController : MonoBehaviour
         SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
         Camera.GetComponent<CameraController>().InitializeCameraPosition();
+        if(!Menu.activeInHierarchy)
+            Cursor.visible = false;
     }
     private void Update()
     {
@@ -40,6 +42,7 @@ public class GameController : MonoBehaviour
             realmController.SendHighscore(PlayerPrefs.GetString("UserName"), time);
             StopAllCoroutines();
             Invoke("DeleteSave", 0.3f);
+            Cursor.visible = true;
         }
     }
     void DeleteSave() => SaveLoad.DeleteSave();
@@ -65,6 +68,13 @@ public class GameController : MonoBehaviour
             SaveLoad.Save(this);
         SceneManager.LoadScene(1);
     }
-    public void Escape() => Menu.SetActive(!Menu.active);
+    public void Escape()
+    {
+        if (!finished)
+        {
+            Menu.SetActive(!Menu.activeInHierarchy);
+            Cursor.visible = Menu.activeInHierarchy;
+        }
+    }
 
 }

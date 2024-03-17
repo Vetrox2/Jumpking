@@ -76,6 +76,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "LoginPanel",
+            "id": "eb53ec06-0e6b-4c62-a8e2-c559574ed822",
+            "actions": [
+                {
+                    "name": "Login",
+                    "type": "Button",
+                    "id": "8dda239e-6e5f-423a-b29b-24c7786c429a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "447bd7ad-524e-4e42-af8d-d3c1b3718909",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Login",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
