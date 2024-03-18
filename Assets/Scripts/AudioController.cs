@@ -5,34 +5,34 @@ using UnityEngine;
 public class AudioController : MonoBehaviour
 {
     [SerializeField]
-    List<AudioClip> clipList;
+    private List<AudioClip> clipList;
     [SerializeField]
-    AudioClip finalClip;
+    private AudioClip finalClip;
     [SerializeField]
-    AudioSource audioSource;
+    private AudioSource audioSource;
     [SerializeField]
-    float gapBetweenAudio;
+    private float gapBetweenAudio;
 
-    bool playingFinalClip;
+    private bool playingFinalClip;
 
     private void Start()
     {
         StartCoroutine(PlayClips());
     }
+
     IEnumerator PlayClips()
     {
-        int i = 0;
-        while (clipList.Count > 0)
+        for(int i = 0; clipList.Count > 0; i ++)
         {
             if (i >= clipList.Count)
                 i = 0;
 
             audioSource.clip = clipList[i];
             audioSource.Play();
-            i++;
             yield return new WaitForSeconds(audioSource.clip.length + gapBetweenAudio);
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && !playingFinalClip)
@@ -41,10 +41,11 @@ public class AudioController : MonoBehaviour
             StopAllCoroutines();
             audioSource.clip = finalClip;
             audioSource.Play();
-            Invoke("PlayAgain", finalClip.length + gapBetweenAudio);
+            Invoke("ResumeLoopPlayback", finalClip.length + gapBetweenAudio);
         }
     }
-    void PlayAgain()
+
+    private void ResumeLoopPlayback()
     {
         playingFinalClip = false;
         StartCoroutine(PlayClips());

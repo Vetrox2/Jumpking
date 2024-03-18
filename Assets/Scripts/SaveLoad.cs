@@ -3,10 +3,9 @@ using UnityEngine;
 
 public static class SaveLoad
 {
-    static string key = "4163731634";
-
     public static string path { get; private set; } = "/save.sav";
 
+    private static string key = "4163731634";
 
     public static void Save(GameController gameController)
     {
@@ -62,7 +61,7 @@ public static class SaveLoad
             File.Delete(Application.dataPath + path);
     }
 
-    static string EncryptFile(string file, string key)
+    private static string EncryptFile(string file, string key)
     {
         string result = "";
         for (int i = 0; i < file.Length; i++)

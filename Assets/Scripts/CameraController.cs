@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public float PosX = 1.5f;
-    public float AddToPosY = 1.5f;
+    [SerializeField]
+    private float PosX;
+    [SerializeField]
+    private float AddToPosY;
 
     public void InitializeCameraPosition()
     {

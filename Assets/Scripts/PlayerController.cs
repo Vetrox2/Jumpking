@@ -10,21 +10,26 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D Rb { get; private set; }
     public bool DuringLoadingJump { get; private set; }
 
-
-    public float MovementSpeed;
-    public float MaxJumpHeight;
-    public float MinJumpHeight;
-    public float JumpMaxLoadingTime;
-    public LayerMask GroundMask;
-    public PhysicsMaterial2D PlayerMaterial, PlayerJumpMaterial;
     public GameObject spriteObject;
 
-    BoxCollider2D collider1;
-    EdgeCollider2D collider2;
-    float jumpLoadingTime = 0;
-    bool waitAfterJump;
-    PlayerAnimationController animController;
+    [SerializeField]
+    private float MovementSpeed;
+    [SerializeField]
+    private float MaxJumpHeight;
+    [SerializeField]
+    private float MinJumpHeight;
+    [SerializeField]
+    private float JumpMaxLoadingTime;
+    [SerializeField]
+    private LayerMask GroundMask;
+    [SerializeField]
+    private PhysicsMaterial2D PlayerMaterial, PlayerJumpMaterial;
 
+    private BoxCollider2D collider1;
+    private EdgeCollider2D collider2;
+    private float jumpLoadingTime;
+    private bool waitAfterJump;
+    private PlayerAnimationController animController;
 
     private void Awake()
     {
@@ -95,6 +100,5 @@ public class PlayerController : MonoBehaviour
         collider2.sharedMaterial = PlayerJumpMaterial;
     }
 
-    void JumpCD() => waitAfterJump = false;
-    
+    private void JumpCD() => waitAfterJump = false;
 }

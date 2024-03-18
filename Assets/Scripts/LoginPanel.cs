@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,9 +8,9 @@ using System.Text.RegularExpressions;
 public class LoginPanel : MonoBehaviour
 {
     [SerializeField]
-    SignPanel SignUpPanel;
+    private SignPanel SignUpPanel;
     [SerializeField]
-    SignPanel SignInPanel;
+    private SignPanel SignInPanel;
 
     public void PressedEnter()
     {
@@ -22,16 +19,19 @@ public class LoginPanel : MonoBehaviour
         else
             SignIn();
     }
+
     public void SwapToLoginPanel()
     {
         SignUpPanel.SignPanelObject.SetActive(false);
         SignInPanel.SignPanelObject.SetActive(true);
     }
+
     public void SwapToSignUpPanel()
     {
         SignUpPanel.SignPanelObject.SetActive(true);
         SignInPanel.SignPanelObject.SetActive(false);
     }
+
     public void SignUp()
     {
         SignUpPanel.ErrorMessage.text = string.Empty;
@@ -54,14 +54,13 @@ public class LoginPanel : MonoBehaviour
             SignUpPanel.ErrorMessage.text = SignUpPanel.DifferentPasswordsMessage;
             return;
         }
+
         SignUpPanel.ErrorMessage.gameObject.SetActive(false);
         SignUpPanel.Button.interactable = false;
 
-
-        RealmController<Users> realmController = new();
-        realmController.RealmLoaded += SignUpCallback;
-        realmController.InitAsync();
+        RealmController<Users> realmController = new(SignUpCallback);
     }
+
     public void SignIn()
     {
         SignInPanel.ErrorMessage.text = string.Empty;
@@ -72,10 +71,9 @@ public class LoginPanel : MonoBehaviour
 
         SignInPanel.Button.interactable = false;
 
-        RealmController<Users> realmController = new();
-        realmController.RealmLoaded += SignInCallback;
-        realmController.InitAsync();
+        RealmController<Users> realmController = new(SignInCallback);
     }
+
     void SignUpCallback(RealmController<Users> realmController)
     {
         if (!realmController.SignUp(SignUpPanel.UserName.text, SignUpPanel.Password.text))

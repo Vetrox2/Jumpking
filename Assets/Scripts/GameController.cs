@@ -5,56 +5,34 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField]
-    Camera Camera;
-    [SerializeField]
-    GameObject EndingScreen;
-    [SerializeField]
-    GameObject Menu;
-    [SerializeField]
-    TextMeshProUGUI TimeText;
-
     [HideInInspector]
     public float time = 0;
 
-    bool finished = false;
+    [SerializeField]
+    private Camera Camera;
+    [SerializeField]
+    private GameObject EndingScreen;
+    [SerializeField]
+    private GameObject Menu;
+    [SerializeField]
+    private TextMeshProUGUI TimeText;
+
+    private bool finished;
 
     private void Start()
     {
         SaveLoad.Load(this);
         StartCoroutine(ActiveSaving());
         Camera.GetComponent<CameraController>().InitializeCameraPosition();
-        if(!Menu.activeInHierarchy)
+        if (!Menu.activeInHierarchy)
             Cursor.visible = false;
     }
+
     private void Update()
     {
         time += Time.deltaTime;
     }
-    public void Finished()
-    {
-        if (!finished)
-        {
-            finished = true;
-            TimeText.text = "Your time: " + System.Math.Round(time,2).ToString();
-            EndingScreen.SetActive(true);
-            RealmController<Highscore> realmController = new();
-            realmController.SendHighscore(PlayerPrefs.GetString("UserName"), time);
-            StopAllCoroutines();
-            Invoke("DeleteSave", 0.3f);
-            Cursor.visible = true;
-        }
-    }
-    void DeleteSave() => SaveLoad.DeleteSave();
 
-    IEnumerator ActiveSaving()
-    {
-        while (!finished)
-        {
-            SaveLoad.Save(this);
-            yield return new WaitForSeconds(0.2f);
-        }
-    }
     static public GameObject FindPlayer()
     {
         GameObject player;
@@ -62,12 +40,14 @@ public class GameController : MonoBehaviour
             return player;
         return null;
     }
+
     public void BackToMenu()
     {
         if (!finished)
             SaveLoad.Save(this);
         SceneManager.LoadScene(1);
     }
+
     public void Escape()
     {
         if (!finished)
@@ -77,4 +57,32 @@ public class GameController : MonoBehaviour
         }
     }
 
+    public void Finished()
+    {
+        if (!finished)
+        {
+            finished = true;
+            TimeText.text = "Your time: " + System.Math.Round(time, 2).ToString();
+            EndingScreen.SetActive(true);
+
+            RealmController<Highscore> realmController = new(SendHighscoreToDB);
+
+            StopAllCoroutines();
+            Invoke("DeleteSave", 0.3f);
+            Cursor.visible = true;
+        }
+    }
+
+    private void SendHighscoreToDB(RealmController<Highscore> realmController) => realmController.SendHighscore(PlayerPrefs.GetString("UserName"), time);
+
+    private void DeleteSave() => SaveLoad.DeleteSave();
+
+    private IEnumerator ActiveSaving()
+    {
+        while (!finished)
+        {
+            SaveLoad.Save(this);
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
 }

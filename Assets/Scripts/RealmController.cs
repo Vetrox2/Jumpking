@@ -8,28 +8,23 @@ using Realms.Sync.Exceptions;
 using System.Linq;
 using System;
 using Konscious.Security.Cryptography;
-using MongoDB.Bson.IO;
 using System.Text;
 
 public class RealmController<T> where T : IRealmObject
 {
-    private Realm realm;
-    private readonly string myRealmAppId = "application-0-lvuzw";
     public event Action<RealmController<T>> RealmLoaded;
 
-    public bool SignUp(string login, string password)
-    {
-        if (realm.All<Users>().Any(Users => Users.Login == login))
-            return false;
+    private readonly string myRealmAppId = "application-0-lvuzw";
+    private Realm realm;
 
-        realm.Write(() =>
-        {
-            realm.Add(new Users { Login = login, Password = HashPassword(password) });
-        });
-        return true;
+    public RealmController() { }
+
+    public RealmController(Action<RealmController<T>> functionAfterRealmLoaded)
+    {
+        RealmLoaded = functionAfterRealmLoaded;
+        InitAsync();
     }
-    public bool SignIn(string login, string password) => realm.All<Users>().Any(Users => Users.Login == login && Users.Password == HashPassword(password)); 
-   
+
     public async void InitAsync()
     {
         var app = App.Create(myRealmAppId);
@@ -45,15 +40,28 @@ public class RealmController<T> where T : IRealmObject
         RealmLoaded?.Invoke(this);
     }
 
-    private FlexibleSyncConfiguration GetConfig(User user)
+    public bool SignUp(string login, string password)
     {
-        FlexibleSyncConfiguration config = new(user);
+        if (realm.All<Users>().Any(Users => Users.Login == login))
+            return false;
 
-        config.ClientResetHandler = new DiscardUnsyncedChangesHandler
+        realm.Write(() =>
         {
-            ManualResetFallback = (ClientResetException clientResetException) => clientResetException.InitiateClientReset()
-        };
-        return config;
+            realm.Add(new Users { Login = login, Password = HashPassword(password) });
+        });
+        return true;
+    }
+
+    public bool SignIn(string login, string password) => realm.All<Users>().Any(Users => Users.Login == login && Users.Password == HashPassword(password));
+
+    public List<Highscore> GetHighscore() => realm.All<Highscore>().OrderBy(x => x.Time).ToList();
+
+    public void SendHighscore(string name, float time)
+    {
+        realm.Write(() =>
+        {
+            realm.Add(new Highscore { Player = name, Time = Math.Round(time, 2) });
+        });
     }
 
     private async Task<User> Get_userAsync(App app)
@@ -66,48 +74,25 @@ public class RealmController<T> where T : IRealmObject
         return user;
     }
 
-    public void Terminate()
+    private FlexibleSyncConfiguration GetConfig(User user)
     {
-        realm?.Dispose();
+        FlexibleSyncConfiguration config = new(user);
+
+        config.ClientResetHandler = new DiscardUnsyncedChangesHandler
+        {
+            ManualResetFallback = (ClientResetException clientResetException) => clientResetException.InitiateClientReset()
+        };
+        return config;
     }
 
-    public List<Highscore> GetHighscore()
-    {
-        try
-        {
-            var currentHighscore = realm.All<Highscore>().OrderBy(x => x.Time).ToList();
-            return currentHighscore;
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-        return null;
-    }
-
-    public void SendHighscore(string name, float time)
-    {
-        try
-        {
-            realm.Write(() =>
-            {
-                realm.Add(new Highscore { Player = name, Time = Math.Round(time, 2) });
-            });
-
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-    }
-
-    string HashPassword(string password)
+    private string HashPassword(string password)
     {
         var argon = new Argon2i(Encoding.UTF8.GetBytes(password));
         argon.DegreeOfParallelism = 16;
         argon.MemorySize = 8192;
         argon.Salt = Encoding.UTF8.GetBytes("542fsewrf23f");
         argon.Iterations = 10;
+
         var hash = argon.GetBytes(128).ToList();
         password = string.Empty;
         hash.ForEach(x => password += x.ToString());
