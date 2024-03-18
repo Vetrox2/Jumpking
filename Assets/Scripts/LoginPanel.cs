@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class LoginPanel : MonoBehaviour
 {
@@ -35,13 +36,15 @@ public class LoginPanel : MonoBehaviour
     {
         SignUpPanel.ErrorMessage.text = string.Empty;
         SignUpPanel.ErrorMessage.gameObject.SetActive(true);
+        string passwordPattern = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$";
+        string usernamePattern = @"^(?=.{3,12}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$";
 
-        if (SignUpPanel.UserName.text.Length < 3)
+        if (!Regex.Match(SignUpPanel.UserName.text, usernamePattern).Success)
         {
             SignUpPanel.ErrorMessage.text = SignUpPanel.WrongLoginMessage;
             return;
         }
-        if (SignUpPanel.Password.text.Length < 5)
+        if (!Regex.Match(SignUpPanel.Password.text, passwordPattern).Success)
         {
             SignUpPanel.ErrorMessage.text = SignUpPanel.WrongPasswordMessage;
             return;
@@ -51,7 +54,6 @@ public class LoginPanel : MonoBehaviour
             SignUpPanel.ErrorMessage.text = SignUpPanel.DifferentPasswordsMessage;
             return;
         }
-
         SignUpPanel.ErrorMessage.gameObject.SetActive(false);
         SignUpPanel.Button.interactable = false;
 

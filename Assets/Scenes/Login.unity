@@ -1053,9 +1053,11 @@ MonoBehaviour:
     ConfirmPassword: {fileID: 886939429}
     ErrorMessage: {fileID: 1855623213}
     Button: {fileID: 2052786128}
-    WrongLoginMessage: Username is not valid
-    WrongPasswordMessage: Password is not valid
-    DifferentPasswordsMessage: Passwords aren't the same
+    WrongLoginMessage: 'Username is not valid (At least 3 characters, permitted: 
+      letters, numbers, _ and .).'
+    WrongPasswordMessage: Password is not valid (At least one character, one number
+      and one special character, minimum 6 characters).
+    DifferentPasswordsMessage: Passwords do not match.
   SignInPanel:
     SignPanelObject: {fileID: 1101283902}
     UserName: {fileID: 1420993594}
@@ -1064,7 +1066,7 @@ MonoBehaviour:
     ErrorMessage: {fileID: 1160526601}
     Button: {fileID: 720342911}
     WrongLoginMessage: 
-    WrongPasswordMessage: Incorect password
+    WrongPasswordMessage: Incorect password.
     DifferentPasswordsMessage: 
 --- !u!222 &722469467
 CanvasRenderer:
@@ -1570,7 +1572,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 12
+  m_CharacterLimit: 20
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -2446,7 +2448,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 20
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -2779,7 +2781,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 20
+  m_CharacterLimit: 12
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -3607,7 +3609,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 12
+  m_CharacterLimit: 20
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -4299,7 +4301,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 12
+  m_CharacterLimit: 20
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -4468,7 +4470,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
