@@ -14,7 +14,7 @@ public class RealmController<T> where T : IRealmObject
 {
     public event Action<RealmController<T>> RealmLoaded;
 
-    private readonly string myRealmAppId = "application-0-lvuzw";
+    private readonly string myRealmAppId = "MONGODB-KEY";
     private Realm realm;
 
     public RealmController() { }
